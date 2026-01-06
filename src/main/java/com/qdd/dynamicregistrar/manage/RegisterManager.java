@@ -1,6 +1,8 @@
 package com.qdd.dynamicregistrar.manage;
 
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -12,10 +14,13 @@ import com.qdd.dynamicregistrar.item.CustomProperties;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = DynamicRegistrar.MODID)
 public class RegisterManager {
@@ -44,6 +49,42 @@ public class RegisterManager {
 
     @SubscribeEvent
     public static void onDatapackReload(AddReloadListenerEvent event) {
-        event.addListener(new CustomReloadListener());
+        ITEMS.clear();
+        BLOCKS.clear();
+        ENTITY_TYPES.clear();
+        ENTITY_BLOCKS.clear();
+        reloadItems(event);
+        reloadBlocks(event);
+        reloadEntityTypes(event);
+        reloadEntityBlocks(event);
+    }
+
+//    @SubscribeEvent
+//    public static void onDatapackSyncEvent(OnDatapackSyncEvent event) {
+//        PacketDistributor.sendToPlayer(event.getPlayer(), );
+//    }
+
+    private static void reloadItems(AddReloadListenerEvent event) {
+        // 从数据包中加载物品
+        MappedRegistry<?> D = (MappedRegistry<?>) BuiltInRegistries.ITEM;
+        D.unfreeze();
+        for (CustomProperties properties : event.getRegistryAccess().registry(CUSTOM_PROPERTIES_REGISTRY_KEY).orElseThrow().stream().toList()) {
+            ResourceLocation key = properties.identifier();
+            Item registeredItem = Registry.register(BuiltInRegistries.ITEM, key, new Item(properties.toItemProperties()));
+            ITEMS.put(key, registeredItem);
+        }
+        D.freeze();
+    }
+
+    private static void reloadBlocks(AddReloadListenerEvent event) {
+        // TODO: Implement block reloading
+    }
+
+    private static void reloadEntityTypes(AddReloadListenerEvent event) {
+        // TODO: Implement entity type reloading
+    }
+
+    private static void reloadEntityBlocks(AddReloadListenerEvent event) {
+        // TODO: Implement entity block reloading
     }
 }

@@ -10,21 +10,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import com.qdd.dynamicregistrar.DynamicRegistrar;
+import com.qdd.dynamicregistrar.item.ArmorProperties;
 import com.qdd.dynamicregistrar.item.CustomProperties;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = DynamicRegistrar.MODID)
 public class RegisterManager {
-    public static final ResourceKey<Registry<CustomProperties>> CUSTOM_PROPERTIES_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(DynamicRegistrar.MODID, "custom_properties"));
+    public static final ResourceKey<Registry<CustomProperties>> CUSTOM_PROPERTIES_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(DynamicRegistrar.MODID, "items"));
+    // 盔甲属性注册表
+    public static final ResourceKey<Registry<ArmorProperties>> ARMOR_PROPERTIES_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(DynamicRegistrar.MODID, "armor"));
 
     // 物品注册表
     public static Map<ResourceLocation, Item> ITEMS = new HashMap<>();
@@ -45,6 +45,11 @@ public class RegisterManager {
                 CustomProperties.CODEC,
                 CustomProperties.CODEC
         );
+        event.dataPackRegistry(
+                ARMOR_PROPERTIES_REGISTRY_KEY,
+                ArmorProperties.CODEC,
+                ArmorProperties.CODEC
+        );
     }
 
     @SubscribeEvent
@@ -59,10 +64,6 @@ public class RegisterManager {
         reloadEntityBlocks(event);
     }
 
-//    @SubscribeEvent
-//    public static void onDatapackSyncEvent(OnDatapackSyncEvent event) {
-//        PacketDistributor.sendToPlayer(event.getPlayer(), );
-//    }
 
     private static void reloadItems(AddReloadListenerEvent event) {
         // 从数据包中加载物品
@@ -70,6 +71,9 @@ public class RegisterManager {
         D.unfreeze();
         for (CustomProperties properties : event.getRegistryAccess().registry(CUSTOM_PROPERTIES_REGISTRY_KEY).orElseThrow().stream().toList()) {
             ResourceLocation key = properties.identifier();
+            if (BuiltInRegistries.ITEM.containsKey(ResourceKey.create(BuiltInRegistries.ITEM.key(), key))) {
+                ((MappedRegistry<?>) BuiltInRegistries.ITEM).byLocation.remove(key);
+            }
             Item registeredItem = Registry.register(BuiltInRegistries.ITEM, key, new Item(properties.toItemProperties()));
             ITEMS.put(key, registeredItem);
         }

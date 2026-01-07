@@ -1,8 +1,0 @@
-{
-  "food": {
-    "eat_seconds": 1.0,
-    "nutrition": 0,
-    "saturation": 0.0
-  },
-  "identifier": "dynamicregistrar:example_custom_properties"
-}

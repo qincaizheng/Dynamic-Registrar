@@ -1,0 +1,156 @@
+package com.qdd.dynamicregistrar.datagen;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.qdd.dynamicregistrar.DynamicRegistrar;
+import com.qdd.dynamicregistrar.manage.RegisterManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.Item;
+
+import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
+
+/**
+ * 热数据生成器 - 在游戏运行时为没有模型文件的物品生成默认模型
+ */
+public class HotDatagen {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    /**
+     * 运行热数据生成，为所有动态注册的物品生成默认模型文件
+     */
+    public static void run(ResourceManager resourceManager) throws IOException {
+        DynamicRegistrar.LOGGER.info("开始运行热数据生成...");
+
+        // 获取游戏运行目录
+        Path runPath = Paths.get("").toAbsolutePath();
+        Path modelsPath = runPath.resolve("resourcepacks/dynamicregistrar/assets");
+
+        int generatedCount = 0;
+
+        // 遍历所有动态注册的物品
+        for (Map.Entry<ResourceLocation, Item> entry : RegisterManager.ITEMS.entrySet()) {
+            ResourceLocation itemId = entry.getKey();
+
+            // 检查物品是否已有模型文件
+            if (!hasItemModel(resourceManager, itemId)) {
+                generateDefaultItemModel(modelsPath, itemId);
+                generatePlaceholderTexture(modelsPath, itemId);
+                generatedCount++;
+                DynamicRegistrar.LOGGER.info("为物品 {} 生成了默认模型和纹理", itemId);
+            }
+        }
+
+        // 生成 pack.mcmeta 文件
+        generatePackMcmeta(runPath.resolve("resourcepacks/dynamicregistrar"));
+
+        DynamicRegistrar.LOGGER.info("热数据生成完成！共生成了 {} 个模型文件", generatedCount);
+        DynamicRegistrar.LOGGER.info("请在游戏中启用资源包: dynamicregistrar");
+    }
+
+    /**
+     * 检查物品是否已有模型文件
+     */
+    private static boolean hasItemModel(ResourceManager resourceManager, ResourceLocation itemId) {
+        ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(
+                itemId.getNamespace(),
+                "models/item/" + itemId.getPath() + ".json"
+        );
+        return resourceManager.getResource(modelLocation).isPresent();
+    }
+
+    /**
+     * 为物品生成默认的模型文件
+     */
+    private static void generateDefaultItemModel(Path basePath, ResourceLocation itemId) throws IOException {
+        // 创建模型 JSON
+        JsonObject model = new JsonObject();
+        model.addProperty("parent", "minecraft:item/generated");
+
+        JsonObject textures = new JsonObject();
+        // 使用物品自己的纹理路径
+        textures.addProperty("layer0", itemId.getNamespace() + ":item/" + itemId.getPath());
+        model.add("textures", textures);
+
+        // 确定文件路径
+        Path modelPath = basePath.resolve(itemId.getNamespace())
+                .resolve("models/item")
+                .resolve(itemId.getPath() + ".json");
+
+        // 创建目录
+        Files.createDirectories(modelPath.getParent());
+
+        // 写入文件
+        String json = GSON.toJson(model);
+        Files.writeString(modelPath, json);
+    }
+
+    /**
+     * 生成占位纹理图片（16x16 紫红色方块）
+     */
+    private static void generatePlaceholderTexture(Path basePath, ResourceLocation itemId) throws IOException {
+        Path texturePath = basePath.resolve(itemId.getNamespace())
+                .resolve("textures/item")
+                .resolve(itemId.getPath() + ".png");
+
+        // 如果纹理已存在，跳过
+        if (Files.exists(texturePath)) {
+            return;
+        }
+
+        // 创建目录
+        Files.createDirectories(texturePath.getParent());
+
+        // 创建 16x16 的图片
+        BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+
+        // 填充紫红色背景
+        g2d.setColor(new Color(255, 0, 255)); // 紫红色 (Magenta)
+        g2d.fillRect(0, 0, 16, 16);
+
+        // 添加一个黑色边框，使其更明显
+        g2d.setColor(Color.BLACK);
+        g2d.drawRect(0, 0, 15, 15);
+
+        // 在中间画一个问号图案（可选）
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(6, 4, 4, 2);   // 问号上部
+        g2d.fillRect(8, 6, 2, 2);   // 问号中部
+        g2d.fillRect(6, 8, 2, 2);   // 问号下部
+        g2d.fillRect(6, 11, 4, 2);  // 问号的点
+
+        g2d.dispose();
+
+        // 保存为 PNG 文件
+        ImageIO.write(image, "PNG", texturePath.toFile());
+
+        DynamicRegistrar.LOGGER.info("为物品 {} 生成了占位纹理: {}", itemId, texturePath);
+    }
+
+    /**
+     * 生成资源包的 pack.mcmeta 文件
+     */
+    private static void generatePackMcmeta(Path packPath) throws IOException {
+        JsonObject root = new JsonObject();
+        JsonObject pack = new JsonObject();
+        pack.addProperty("pack_format", 34); // NeoForge 1.21.x 使用 pack_format 34
+        pack.addProperty("description", "动态生成的物品模型");
+        root.add("pack", pack);
+
+        Path mcmetaPath = packPath.resolve("pack.mcmeta");
+        Files.createDirectories(packPath);
+
+        String json = GSON.toJson(root);
+        Files.writeString(mcmetaPath, json);
+    }
+}

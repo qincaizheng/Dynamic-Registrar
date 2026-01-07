@@ -16,17 +16,10 @@ public class ModNetwork {
     public static void register(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
         registrar.executesOn(HandlerThread.NETWORK);
-        registrar.playToClient(
-                CustomProperties.TYPE,
-                ByteBufCodecs.fromCodec(CustomProperties.CODEC),
-                ModNetwork::handleDataOnNetwork
-        );
+
 
     }
 
-    private static void handleDataOnNetwork(CustomProperties customProperties, IPayloadContext iPayloadContext) {
-
-    }
 
 
 }

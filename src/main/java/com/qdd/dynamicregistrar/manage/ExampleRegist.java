@@ -27,6 +27,7 @@ public class ExampleRegist {
             64,
             0,
             Rarity.COMMON,
-            DataComponentMap.EMPTY
+            DataComponentMap.EMPTY,
+            null
     );
 }

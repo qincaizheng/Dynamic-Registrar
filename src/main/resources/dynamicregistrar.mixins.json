@@ -2,11 +2,16 @@
   "required": true,
   "package": "com.qdd.dynamicregistrar.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "mixinRegistrySnapshot"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
-  }
+  },
+  "client": [
+    "mixinRegistryAwareItemModelShaper"
+  ]
 }

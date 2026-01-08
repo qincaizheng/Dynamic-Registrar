@@ -8,7 +8,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public record ArmorProperties(ArmorMaterial armorMaterial, CustomProperties customProperties, boolean ifBody) {
+public record ArmorProperties(ArmorMaterial armorMaterial, CustomProperties customProperties, boolean ifBody){
     public static final Codec<ArmorMaterial> ARMOR_MATERIAL_CODEC = RecordCodecBuilder.create(p -> p.group(
             Codec.unboundedMap(ArmorItem.Type.CODEC, Codec.INT).fieldOf("defense").forGetter(ArmorMaterial::defense),
             Codec.INT.fieldOf("enchantmentValue").forGetter(ArmorMaterial::enchantmentValue),

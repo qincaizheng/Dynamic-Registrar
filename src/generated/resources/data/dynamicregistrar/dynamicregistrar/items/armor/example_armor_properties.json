@@ -1,0 +1,24 @@
+{
+  "armor_material": {
+    "defense": {
+      "boots": 1,
+      "chestplate": 2,
+      "helmet": 1,
+      "leggings": 1
+    },
+    "enchantmentValue": 0,
+    "equipSound": "minecraft:item.armor.equip_generic",
+    "knockback_resistance": 0.0,
+    "layers": [
+      {
+        "asset_name": "dynamicregistrar:example_custom_properties"
+      }
+    ],
+    "repairIngredient": [],
+    "toughness": 0.0
+  },
+  "custom_properties": {
+    "identifier": "dynamicregistrar:example_custom_properties"
+  },
+  "if_body": false
+}

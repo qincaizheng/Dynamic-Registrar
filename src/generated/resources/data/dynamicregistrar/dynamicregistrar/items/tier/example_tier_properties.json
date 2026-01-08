@@ -1,0 +1,22 @@
+{
+  "custom_properties": {
+    "identifier": "dynamicregistrar:example_custom_properties"
+  },
+  "extend_damage": 0.5,
+  "extend_speed": 0.5,
+  "tier": {
+    "attackDamageBonus": 1.0,
+    "enchantmentValue": 1,
+    "incorrectBlocksForDrops": "dynamicregistrar:example_custom_properties",
+    "repairIngredient": [],
+    "speed": 1.0,
+    "uses": 1
+  },
+  "types": [
+    "sword",
+    "axe",
+    "pickaxe",
+    "shovel",
+    "hoe"
+  ]
+}

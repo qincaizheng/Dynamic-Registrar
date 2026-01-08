@@ -1,13 +1,6 @@
 {
   "itemGroup.dynamicregistrar": "Example Mod Tab",
-  "block.dynamicregistrar.example_block": "Example Block",
-  "item.dynamicregistrar.example_item": "Example Item",
-
   "dynamicregistrar.configuration.title": "DynamicRegistrar Configs",
-  "dynamicregistrar.configuration.section.dynamicregistrar.common.toml": "DynamicRegistrar Configs",
-  "dynamicregistrar.configuration.section.dynamicregistrar.common.toml.title": "DynamicRegistrar Configs",
-  "dynamicregistrar.configuration.items": "Item List",
-  "dynamicregistrar.configuration.logDirtBlock": "Log Dirt Block",
-  "dynamicregistrar.configuration.magicNumberIntroduction": "Magic Number Text",
-  "dynamicregistrar.configuration.magicNumber": "Magic Number"
+  "item.dynamicregistrar.example_complex_custom_properties.lore": "This is a complex item.",
+  "dynamicregistrar.networking.failed": "Sync Packet Failed"
 }

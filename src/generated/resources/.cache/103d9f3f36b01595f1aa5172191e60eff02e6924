@@ -1,2 +1,5 @@
-// 1.21.1	2026-01-07T16:29:16.5313555	Registries
-c310d93f3fc96cabdb0c1ad58538023b56728513 data/dynamicregistrar/dynamicregistrar/items/example_custom_properties.json
+// 1.21.1	2026-01-08T17:58:21.8836007	Registries
+3216f8da38352a6fc538e24625fcde8c106a38d0 data/dynamicregistrar/dynamicregistrar/items/armor/example_armor_properties.json
+2ab7668fc969b91e9dac50565a692f77d57a5beb data/dynamicregistrar/dynamicregistrar/items/item/example_complex_custom_properties.json
+c310d93f3fc96cabdb0c1ad58538023b56728513 data/dynamicregistrar/dynamicregistrar/items/item/example_custom_properties.json
+892db7b66cc8e91582183ffaa3e9a910371dea6f data/dynamicregistrar/dynamicregistrar/items/tier/example_tier_properties.json

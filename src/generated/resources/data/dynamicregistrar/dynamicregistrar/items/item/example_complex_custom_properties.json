@@ -1,0 +1,45 @@
+{
+  "type": "FishingRodItem",
+  "attribute_modifiers": {
+    "modifiers": [
+      {
+        "type": "minecraft:generic.attack_damage",
+        "amount": 1.0,
+        "id": "minecraft:base_attack_damage",
+        "operation": "add_value"
+      }
+    ]
+  },
+  "can_repair": false,
+  "components": {
+    "minecraft:lore": [
+      "{\"translate\":\"item.dynamicregistrar.example_complex_custom_properties.lore\"}"
+    ]
+  },
+  "fire_resistant": true,
+  "food": {
+    "eat_seconds": 1.0,
+    "effects": [
+      {
+        "effect": {
+          "duration": 100,
+          "id": "minecraft:health_boost",
+          "neoforge:cures": [
+            "milk",
+            "protected_by_totem"
+          ],
+          "show_icon": true
+        }
+      }
+    ],
+    "nutrition": 1,
+    "saturation": 1.0,
+    "using_converts_to": {
+      "id": "minecraft:bowl"
+    }
+  },
+  "identifier": "dynamicregistrar:example_complex_custom_properties",
+  "max_damage": 300,
+  "max_stack_size": 1,
+  "rarity": "rare"
+}

@@ -38,6 +38,14 @@ public class mixinRegistrySnapshot {
                 }
             }
         }
+        if(registry.equals(BuiltInRegistries.ARMOR_MATERIAL)) {
+            for(ResourceLocation key : RegisterManager.ARMOR_MATERIALS.keySet()) {
+                if (BuiltInRegistries.ARMOR_MATERIAL.containsKey(ResourceKey.create(BuiltInRegistries.ARMOR_MATERIAL.key(), key))) {
+                    ids.remove(BuiltInRegistries.ARMOR_MATERIAL.getId(ResourceKey.create(BuiltInRegistries.ARMOR_MATERIAL.key(), key)));
+                    aliases.remove(key);
+                }
+            }
+        }
         if (registry.equals(BuiltInRegistries.BLOCK)) {
             for(ResourceLocation key : RegisterManager.BLOCKS.keySet()) {
                 if (BuiltInRegistries.BLOCK.containsKey(ResourceKey.create(BuiltInRegistries.BLOCK.key(), key))) {

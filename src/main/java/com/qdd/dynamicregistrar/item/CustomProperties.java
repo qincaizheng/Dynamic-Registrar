@@ -9,6 +9,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.qdd.dynamicregistrar.data.DataComponents;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public record CustomProperties(
     ResourceLocation identifier,
     String type,
+    String curiosType,
     boolean canRepair,
     @Nullable FoodProperties food,
     boolean fireResistant,
@@ -28,6 +30,7 @@ public record CustomProperties(
     public static final Codec<CustomProperties> CODEC = RecordCodecBuilder.create(p -> p.group(
             ResourceLocation.CODEC.fieldOf("identifier").forGetter(CustomProperties::identifier),
             Codec.STRING.optionalFieldOf("type","").forGetter(CustomProperties::type),
+            Codec.STRING.optionalFieldOf("curios_type","").forGetter(CustomProperties::curiosType),
             Codec.BOOL.optionalFieldOf("can_repair", true).forGetter(CustomProperties::canRepair),
             FoodProperties.DIRECT_CODEC.optionalFieldOf("food").forGetter(cp -> Optional.ofNullable(cp.food())),
             Codec.BOOL.optionalFieldOf("fire_resistant", false).forGetter(CustomProperties::fireResistant),
@@ -36,8 +39,8 @@ public record CustomProperties(
             Codec.INT.optionalFieldOf("max_damage", 0).forGetter(CustomProperties::maxDamage),
             Rarity.CODEC.optionalFieldOf("rarity", Rarity.COMMON).forGetter(CustomProperties::rarity),
             DataComponentMap.CODEC.optionalFieldOf("components", DataComponentMap.EMPTY).forGetter(CustomProperties::components)
-    ).apply(p, (identifier, type, canRepair, food, fireResistant, attributeModifiers, maxStackSize, maxDamage, rarity, components) ->
-            new CustomProperties(identifier, type, canRepair, food.orElse(null), fireResistant, attributeModifiers, maxStackSize, maxDamage, rarity, components)
+    ).apply(p, (identifier, type, curiosType, canRepair, food, fireResistant, attributeModifiers, maxStackSize, maxDamage, rarity, components) ->
+            new CustomProperties(identifier, type, curiosType, canRepair, food.orElse(null), fireResistant, attributeModifiers, maxStackSize, maxDamage, rarity, components)
     ));
 
     private static <T> void applyComponent(Item.Properties properties, TypedDataComponent<T> component) {
@@ -53,6 +56,7 @@ public record CustomProperties(
         if (maxDamage != 0) properties.durability(maxDamage);
         if (food != null) properties.food(food);
         if (rarity != Rarity.COMMON) properties.rarity(rarity);
+        properties.component(DataComponents.curios, curiosType);
         if (!components.isEmpty()){
             components.forEach(component ->
                 applyComponent(properties, component)

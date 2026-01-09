@@ -1,16 +1,24 @@
 package com.qdd.dynamicregistrar.manage;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import com.mojang.datafixers.util.Pair;
 import com.qdd.dynamicregistrar.DynamicRegistrar;
+import com.qdd.dynamicregistrar.curio.BackRender;
+import com.qdd.dynamicregistrar.curio.CurioItem;
+import com.qdd.dynamicregistrar.curio.HeadRender;
+import com.qdd.dynamicregistrar.data.DataComponents;
 import com.qdd.dynamicregistrar.item.ArmorProperties;
 import com.qdd.dynamicregistrar.item.CustomProperties;
 import com.qdd.dynamicregistrar.item.TierProperties;
@@ -18,17 +26,20 @@ import com.qdd.dynamicregistrar.network.ArmorPropertiesPacket;
 import com.qdd.dynamicregistrar.network.CustomPropertiesPacket;
 import com.qdd.dynamicregistrar.network.ReloadPacket;
 import com.qdd.dynamicregistrar.network.TierPropertiesPacket;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @EventBusSubscriber(modid = DynamicRegistrar.MODID)
 public class RegisterManager {
@@ -127,6 +138,7 @@ public class RegisterManager {
         for (ArmorProperties properties : SYNC_ARMOR_PROPERTIES) {
             ResourceLocation key = properties.customProperties().identifier();
             if (BuiltInRegistries.ARMOR_MATERIAL.containsKey(ResourceKey.create(BuiltInRegistries.ARMOR_MATERIAL.key(), key))) {
+                ((MappedRegistry<?>) BuiltInRegistries.ARMOR_MATERIAL).byValue.remove(properties.armorMaterial());
                 ((MappedRegistry<?>) BuiltInRegistries.ARMOR_MATERIAL).byLocation.remove(key);
             }
             Holder<ArmorMaterial> registeredMaterial = Registry.registerForHolder(BuiltInRegistries.ARMOR_MATERIAL, key,properties.armorMaterial());
@@ -204,6 +216,47 @@ public class RegisterManager {
         }
         ITEM.freeze();
         DynamicRegistrar.LOGGER.info("Finished reloading items , {} items", ITEMS.size());
+        if(ModList.get().isLoaded("curios")){
+            if(FMLLoader.getDist() == Dist.CLIENT){
+                reloadClientCurios();
+            }
+            reloadCurios();
+        }
+    }
+
+    private static void reloadCurios() {
+        ITEMS.forEach((key, item) -> {
+            if (!item.components().get(DataComponents.curios.value()).isEmpty()) {
+                CuriosApi.registerCurio(item, new CurioItem());
+                Optional<Pair<TagKey<Item>, HolderSet.Named<Item>>> tagKey = BuiltInRegistries.ITEM.getTags().filter(tag ->
+                                tag.getFirst().location().equals(ResourceLocation.fromNamespaceAndPath("curios", item.components().get(DataComponents.curios.value()))))
+                        .findFirst();
+                List<TagKey<Item>> tags = new ArrayList<>(item.builtInRegistryHolder().tags);
+                if (tagKey.isPresent()) {
+                    tags.add(tagKey.get().getFirst());
+                } else {
+                    tags.add(TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("curios", item.components().get(DataComponents.curios.value()))));
+                }
+                item.builtInRegistryHolder().tags = Set.copyOf(tags);
+            }
+        });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void reloadClientCurios() {
+        ITEMS.forEach((key, item) -> {
+            if (item.components().get(DataComponents.curios.value()).isEmpty()) return;
+            switch (item.components().get(DataComponents.curios.value())) {
+                case "head":
+                    CuriosRendererRegistry.register(item,()-> HeadRender.INSTANCE);
+                    break;
+                case "back":
+                    CuriosRendererRegistry.register(item,()-> BackRender.INSTANCE);
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     private static void reloadBlocks() {

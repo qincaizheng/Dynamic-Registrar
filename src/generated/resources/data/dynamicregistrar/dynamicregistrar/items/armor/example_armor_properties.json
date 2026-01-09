@@ -18,6 +18,7 @@
     "toughness": 0.0
   },
   "custom_properties": {
+    "curios_type": "head",
     "identifier": "dynamicregistrar:example_custom_properties"
   },
   "if_body": false

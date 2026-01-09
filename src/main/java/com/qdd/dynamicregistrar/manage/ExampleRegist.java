@@ -39,6 +39,7 @@ public class ExampleRegist {
     public static final CustomProperties EXAMPLE_CUSTOM_PROPERTIES_VALUE = new CustomProperties(
             ResourceLocation.fromNamespaceAndPath(DynamicRegistrar.MODID, "example_custom_properties"),
             "",
+            "head",
             true,
             null,
             false,
@@ -56,10 +57,11 @@ public class ExampleRegist {
     public static final CustomProperties EXAMPLE_COMPLEX_CUSTOM_PROPERTIES = new CustomProperties(
             ResourceLocation.fromNamespaceAndPath(DynamicRegistrar.MODID, "example_complex_custom_properties"),
             "FishingRodItem",
+            "",
             false,
             new FoodProperties(1,1f,false,1F, Optional.of(new ItemStack(Items.BOWL)), List.of(new FoodProperties.PossibleEffect(() -> new MobEffectInstance(MobEffects.HEALTH_BOOST, 100, 0), 1.0F) )),
             true,
-            ItemAttributeModifiers.builder().add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, 1.0, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY).build(),
+            ItemAttributeModifiers.builder().add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, 1.0, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).build(),
             1,
             300,
             Rarity.RARE,

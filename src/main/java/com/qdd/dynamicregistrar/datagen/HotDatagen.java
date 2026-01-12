@@ -1,20 +1,18 @@
 package com.qdd.dynamicregistrar.datagen;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.qdd.dynamicregistrar.DynamicRegistrar;
-import com.qdd.dynamicregistrar.manage.RegisterManager;
-import com.qdd.dynamicregistrar.item.ArmorProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.qdd.dynamicregistrar.DynamicRegistrar;
+import com.qdd.dynamicregistrar.manage.RegisterManager;
 
 import javax.imageio.ImageIO;
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;

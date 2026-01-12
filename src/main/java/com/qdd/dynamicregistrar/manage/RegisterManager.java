@@ -1,7 +1,6 @@
 package com.qdd.dynamicregistrar.manage;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -13,7 +12,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import com.mojang.datafixers.util.Pair;
 import com.qdd.dynamicregistrar.DynamicRegistrar;
 import com.qdd.dynamicregistrar.curio.BackRender;
 import com.qdd.dynamicregistrar.curio.CurioItem;
@@ -34,6 +32,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -220,23 +219,21 @@ public class RegisterManager {
             if(FMLLoader.getDist() == Dist.CLIENT){
                 reloadClientCurios();
             }
-            reloadCurios();
         }
+    }
+
+    @SubscribeEvent
+    public static void onTagsUpdated(TagsUpdatedEvent event) {
+        reloadCurios();
     }
 
     private static void reloadCurios() {
         ITEMS.forEach((key, item) -> {
             if (!item.components().get(DataComponents.curios.value()).isEmpty()) {
                 CuriosApi.registerCurio(item, new CurioItem());
-                Optional<Pair<TagKey<Item>, HolderSet.Named<Item>>> tagKey = BuiltInRegistries.ITEM.getTags().filter(tag ->
-                                tag.getFirst().location().equals(ResourceLocation.fromNamespaceAndPath("curios", item.components().get(DataComponents.curios.value()))))
-                        .findFirst();
                 List<TagKey<Item>> tags = new ArrayList<>(item.builtInRegistryHolder().tags);
-                if (tagKey.isPresent()) {
-                    tags.add(tagKey.get().getFirst());
-                } else {
-                    tags.add(TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("curios", item.components().get(DataComponents.curios.value()))));
-                }
+                TagKey<Item> newTag=TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("curios", item.components().get(DataComponents.curios.value())));
+                tags.add(newTag);
                 item.builtInRegistryHolder().tags = Set.copyOf(tags);
             }
         });

@@ -1,18 +1,11 @@
 package com.qdd.dynamicregistrar.manage;
 
-import com.qdd.dynamicregistrar.DynamicRegistrar;
-import com.qdd.dynamicregistrar.item.ArmorProperties;
-import com.qdd.dynamicregistrar.item.CustomProperties;
-import com.qdd.dynamicregistrar.item.TierProperties;
-import net.neoforged.neoforge.common.SimpleTier;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -25,6 +18,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.Ingredient;
+import com.qdd.dynamicregistrar.DynamicRegistrar;
+import com.qdd.dynamicregistrar.item.ArmorProperties;
+import com.qdd.dynamicregistrar.item.CustomProperties;
+import com.qdd.dynamicregistrar.item.TierProperties;
+import net.neoforged.neoforge.common.SimpleTier;
 
 import java.util.List;
 import java.util.Map;

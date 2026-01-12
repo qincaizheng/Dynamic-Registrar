@@ -1,14 +1,10 @@
 package com.qdd.dynamicregistrar.datagen;
 
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.data.DataProvider;
 import com.qdd.dynamicregistrar.DynamicRegistrar;
-import com.qdd.dynamicregistrar.item.ArmorProperties;
 import com.qdd.dynamicregistrar.manage.ExampleRegist;
 import com.qdd.dynamicregistrar.manage.RegisterManager;
-import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataProvider;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;

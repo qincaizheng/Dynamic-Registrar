@@ -1,14 +1,9 @@
 package com.qdd.dynamicregistrar.network;
 
-import com.mojang.serialization.Codec;
 import com.qdd.dynamicregistrar.DynamicRegistrar;
-import com.qdd.dynamicregistrar.item.CustomProperties;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.HandlerThread;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 

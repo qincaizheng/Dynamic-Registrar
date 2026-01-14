@@ -9,7 +9,9 @@
     "attackDamageBonus": 1.0,
     "enchantmentValue": 1,
     "incorrectBlocksForDrops": "dynamicregistrar:example_custom_properties",
-    "repairIngredient": [],
+    "repairIngredient": {
+      "tag": "minecraft:planks"
+    },
     "speed": 1.0,
     "uses": 1
   },

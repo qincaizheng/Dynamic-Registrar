@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -98,7 +99,7 @@ public class ExampleRegist {
                     1f,
                     1f,
                     1,
-                    () -> Ingredient.EMPTY
+                    () -> Ingredient.of(ItemTags.PLANKS)
             ),
             EXAMPLE_CUSTOM_PROPERTIES_VALUE,
             List.of("sword", "axe", "pickaxe", "shovel", "hoe"),

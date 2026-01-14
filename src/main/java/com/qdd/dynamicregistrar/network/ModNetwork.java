@@ -1,6 +1,7 @@
 package com.qdd.dynamicregistrar.network;
 
 import com.qdd.dynamicregistrar.DynamicRegistrar;
+import com.qdd.dynamicregistrar.gui.OpenExportScreenPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -17,6 +18,7 @@ public class ModNetwork {
         registrar.playToClient(ArmorPropertiesPacket.TYPE, ArmorPropertiesPacket.STREAM_CODEC, ArmorPropertiesPacket::handle);
         registrar.playToClient(TierPropertiesPacket.TYPE, TierPropertiesPacket.STREAM_CODEC, TierPropertiesPacket::handle);
         registrar.playToClient(ReloadPacket.TYPE, ReloadPacket.STREAM_CODEC, ReloadPacket::handle);
+        registrar.playToClient(OpenExportScreenPacket.TYPE, OpenExportScreenPacket.STREAM_CODEC, OpenExportScreenPacket::handle);
 
     }
 
